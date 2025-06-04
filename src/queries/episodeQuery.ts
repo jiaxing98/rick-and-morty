@@ -43,6 +43,7 @@ const getFilteredEpisodes = async (params: QueryParams): Promise<PaginationDto<E
 //#region QueryOptions
 const transformEpisodeDto = (data: EpisodeDto): Episode => {
   return {
+    id: data.id,
     name: data.name,
     air_date: data.air_date,
     episode: data.episode,

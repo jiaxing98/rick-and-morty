@@ -4,6 +4,7 @@ import { useQueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-qu
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import { NotFoundError } from '@/api/axios'
 import { characterQueryOptions } from '@/queries/characterQuery'
+import { CharacterCard } from '@/components/card/CharacterCard'
 
 export const Route = createFileRoute('/characters/$characterId')({
   loader: ({ context: { queryClient }, params: { characterId } }) => {
@@ -44,8 +45,7 @@ function CharacterComponent() {
 
   return (
     <div className="space-y-2">
-      <h4 className="text-xl font-bold underline">{data.name}</h4>
-      <div className="text-sm">{data.status}</div>
+      <CharacterCard info={data} />
     </div>
   )
 }

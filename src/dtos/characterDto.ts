@@ -1,7 +1,7 @@
 export interface CharacterDto {
   id: number
   name: string
-  status: string
+  status: 'Alive' | 'Dead' | 'unknown'
   species: string
   type: string
   gender: 'Female' | 'Male' | 'Genderless' | 'unknown'

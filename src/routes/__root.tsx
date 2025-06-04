@@ -39,8 +39,7 @@ function RootComponent() {
           Characters
         </Link>
         <Link
-          // @ts-expect-error
-          to="/route-a"
+          to="/locations"
           activeProps={{
             className: 'font-bold',
           }}
@@ -48,8 +47,7 @@ function RootComponent() {
           Location
         </Link>
         <Link
-          // @ts-expect-error
-          to="/this-route-does-not-exist"
+          to="/episodes"
           activeProps={{
             className: 'font-bold',
           }}
@@ -59,8 +57,8 @@ function RootComponent() {
       </div>
       <hr />
       <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools position="bottom-right" />
+      <ReactQueryDevtools buttonPosition="bottom-right" />
+      <TanStackRouterDevtools position="bottom-left" />
     </>
   )
 }
