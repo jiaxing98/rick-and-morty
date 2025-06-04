@@ -6,6 +6,11 @@ import { queryOptions } from '@tanstack/react-query'
 import { useCallback } from 'react'
 
 //#region API calls
+interface QueryParams {
+  name?: string
+  episode?: string
+}
+
 const getAllEpisodes = async (page?: number): Promise<PaginationDto<EpisodeDto>> => {
   return await api
     .get<PaginationDto<EpisodeDto>>(`/episode/`, {
@@ -22,6 +27,15 @@ const getEpisode = async (id: string): Promise<EpisodeDto> => {
 
 const getMultipleEpisodes = async (ids: string[]): Promise<EpisodeDto[]> => {
   return await api.get<EpisodeDto[]>(`/episode/${ids.join(',')}`).then((r) => r.data)
+}
+
+const getFilteredEpisodes = async (params: QueryParams): Promise<PaginationDto<EpisodeDto>> => {
+  return await api.get<PaginationDto<EpisodeDto>>(`/episode /`, {
+    params: {
+      name: params.name,
+      episode: params.episode,
+    }
+  }).then((r) => r.data)
 }
 //#endregion
 
@@ -41,6 +55,8 @@ export const allEpisodesQueryOptions = (page?: number) =>
   queryOptions({
     queryKey: ['espisodes', page],
     queryFn: () => getAllEpisodes(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
     select: useCallback((data: PaginationDto<EpisodeDto>) => data.result.map((x) => transformEpisodeDto(x)), []),
   })
 
@@ -48,6 +64,8 @@ export const episodeQueryOptions = (id: string) =>
   queryOptions({
     queryKey: ['espisode', id],
     queryFn: () => getEpisode(id),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
     select: useCallback((data: EpisodeDto) => transformEpisodeDto(data), []),
   })
 
@@ -55,6 +73,17 @@ export const multipleEpisodesQueryOptions = (ids: string[]) =>
   queryOptions({
     queryKey: ['espisodes', ids],
     queryFn: () => getMultipleEpisodes(ids),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
     select: useCallback((data: EpisodeDto[]) => data.map((x) => transformEpisodeDto(x)), []),
+  })
+
+export const filteredEpisodesQueryOptions = (params: QueryParams) =>
+  queryOptions({
+    queryKey: ['espisodes', params],
+    queryFn: () => getFilteredEpisodes(params),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    select: useCallback((data: PaginationDto<EpisodeDto>) => data.result.map((x) => transformEpisodeDto(x)), []),
   })
 //#endregion
