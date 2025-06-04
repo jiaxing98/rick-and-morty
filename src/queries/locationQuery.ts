@@ -3,7 +3,6 @@ import type { LocationDto } from '@/dtos/locationDto'
 import type { PaginationDto } from '@/dtos/paginationDto'
 import type { Location } from '@/models/location'
 import { queryOptions } from '@tanstack/react-query'
-import { useCallback } from 'react'
 
 //#region API calls
 interface QueryParams {
@@ -31,13 +30,15 @@ const getMultipleLocations = async (ids: string[]): Promise<LocationDto[]> => {
 }
 
 const getFilteredLocations = async (params: QueryParams): Promise<PaginationDto<LocationDto>> => {
-  return await api.get<PaginationDto<LocationDto>>(`/location/`, {
-    params: {
-      name: params.name,
-      type: params.type,
-      dimension: params.dimension,
-    }
-  }).then((r) => r.data)
+  return await api
+    .get<PaginationDto<LocationDto>>(`/location/`, {
+      params: {
+        name: params.name,
+        type: params.type,
+        dimension: params.dimension,
+      },
+    })
+    .then((r) => r.data)
 }
 //#endregion
 
@@ -60,7 +61,8 @@ export const allLocationsQueryOptions = (page?: number) =>
     queryFn: () => getAllLocations(),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: PaginationDto<LocationDto>) => data.result.map((x) => transformLocationDto(x)), []),
+    // * uses a stable function reference if transformation is expensive
+    select: (data: PaginationDto<LocationDto>) => data.results.map((x) => transformLocationDto(x)),
   })
 
 export const locationQueryOptions = (id: string) =>
@@ -69,7 +71,7 @@ export const locationQueryOptions = (id: string) =>
     queryFn: () => getLocation(id),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: LocationDto) => transformLocationDto(data), []),
+    select: (data: LocationDto) => transformLocationDto(data),
   })
 
 export const multipleLocationsQueryOptions = (ids: string[]) =>
@@ -78,7 +80,8 @@ export const multipleLocationsQueryOptions = (ids: string[]) =>
     queryFn: () => getMultipleLocations(ids),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: LocationDto[]) => data.map((x) => transformLocationDto(x)), []),
+    // * uses a stable function reference if transformation is expensive
+    select: (data: LocationDto[]) => data.map((x) => transformLocationDto(x)),
   })
 
 export const filteredLocationsQueryOptions = (params: QueryParams) =>
@@ -87,6 +90,7 @@ export const filteredLocationsQueryOptions = (params: QueryParams) =>
     queryFn: () => getFilteredLocations(params),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: PaginationDto<LocationDto>) => data.result.map((x) => transformLocationDto(x)), []),
+    // * uses a stable function reference if transformation is expensive
+    select: (data: PaginationDto<LocationDto>) => data.results.map((x) => transformLocationDto(x)),
   })
 //#endregion

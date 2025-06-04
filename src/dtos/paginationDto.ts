@@ -5,5 +5,5 @@ export interface PaginationDto<T> {
     next?: string
     prev?: string
   }
-  result: T[]
+  results: T[]
 }

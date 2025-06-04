@@ -3,7 +3,6 @@ import type { CharacterDto } from '@/dtos/characterDto'
 import type { PaginationDto } from '@/dtos/paginationDto'
 import type { Character } from '@/models/character'
 import { queryOptions } from '@tanstack/react-query'
-import { useCallback } from 'react'
 
 //#region API calls
 interface QueryParams {
@@ -33,15 +32,17 @@ const getMultipleCharacters = async (ids: string[]): Promise<CharacterDto[]> => 
 }
 
 const getFilteredCharacters = async (params: QueryParams): Promise<PaginationDto<CharacterDto>> => {
-  return await api.get<PaginationDto<CharacterDto>>(`/character/`, {
-    params: {
-      name: params.name,
-      status: params.status,
-      species: params.species,
-      type: params.type,
-      gender: params.gender,
-    }
-  }).then((r) => r.data)
+  return await api
+    .get<PaginationDto<CharacterDto>>(`/character/`, {
+      params: {
+        name: params.name,
+        status: params.status,
+        species: params.species,
+        type: params.type,
+        gender: params.gender,
+      },
+    })
+    .then((r) => r.data)
 }
 //#endregion
 
@@ -65,11 +66,12 @@ const transformCharacterDto = (data: CharacterDto): Character => {
 
 export const allCharactersQueryOptions = (page?: number) =>
   queryOptions({
-    queryKey: ['characters', page],
+    queryKey: ['characters', page ?? 1],
     queryFn: () => getAllCharacters(),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: PaginationDto<CharacterDto>) => data.result.map((x) => transformCharacterDto(x)), []),
+    // * uses a stable function reference if transformation is expensive
+    select: (data: PaginationDto<CharacterDto>) => data.results.map((x) => transformCharacterDto(x)),
   })
 
 export const characterQueryOptions = (id: string) =>
@@ -78,7 +80,8 @@ export const characterQueryOptions = (id: string) =>
     queryFn: () => getCharacter(id),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: CharacterDto) => transformCharacterDto(data), []),
+    // * uses a stable function reference if transformation is expensive
+    select: (data: CharacterDto) => transformCharacterDto(data),
   })
 
 export const multipleCharactersQueryOptions = (ids: string[]) =>
@@ -87,7 +90,8 @@ export const multipleCharactersQueryOptions = (ids: string[]) =>
     queryFn: () => getMultipleCharacters(ids),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: CharacterDto[]) => data.map((x) => transformCharacterDto(x)), []),
+    // * uses a stable function reference if transformation is expensive
+    select: (data: CharacterDto[]) => data.map((x) => transformCharacterDto(x)),
   })
 
 export const filteredCharactersQueryOptions = (params: QueryParams) =>
@@ -96,6 +100,7 @@ export const filteredCharactersQueryOptions = (params: QueryParams) =>
     queryFn: () => getFilteredCharacters(params),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
-    select: useCallback((data: PaginationDto<CharacterDto>) => data.result.map((x) => transformCharacterDto(x)), []),
+    // * uses a stable function reference if transformation is expensive
+    select: (data: PaginationDto<CharacterDto>) => data.results.map((x) => transformCharacterDto(x)),
   })
 //#endregion

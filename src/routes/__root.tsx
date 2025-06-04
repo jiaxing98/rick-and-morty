@@ -29,23 +29,24 @@ function RootComponent() {
           activeOptions={{ exact: true }}
         >
           Home
-        </Link>{' '}
+        </Link>
         <Link
-          to="/posts"
+          to="/characters"
           activeProps={{
             className: 'font-bold',
           }}
         >
-          Posts
-        </Link>{' '}
+          Characters
+        </Link>
         <Link
+          // @ts-expect-error
           to="/route-a"
           activeProps={{
             className: 'font-bold',
           }}
         >
-          Pathless Layout
-        </Link>{' '}
+          Location
+        </Link>
         <Link
           // @ts-expect-error
           to="/this-route-does-not-exist"
@@ -53,7 +54,7 @@ function RootComponent() {
             className: 'font-bold',
           }}
         >
-          This Route Does Not Exist
+          Episode
         </Link>
       </div>
       <hr />
