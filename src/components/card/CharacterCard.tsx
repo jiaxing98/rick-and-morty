@@ -6,10 +6,9 @@ export const CharacterCard = ({ info }: { info: Character }) => {
   const { name, status, species, type, origin, location, image } = info
 
   return (
-    <div className="flex flex-row max-w-[600px] h-[220px] m-4 rounded-2xl overflow-clip bg-[#2f3436]">
-      <img className=" object-cover w-auto h-auto" src={image} alt={`${name}-image`} />
-
-      <div className="flex flex-col flex-grow-3 gap-4 p-4">
+    <div className="flex flex-col w-full h-full rounded-2xl overflow-clip bg-[#2f3436] sm:flex-row sm:max-w-[600px] sm:max-h-[220px]">
+      <img className="object-cover w-auto h-auto sm:max-w-[230px]" src={image} alt={`${name}-image`} />
+      <div className="flex flex-col gap-4 p-4 flex-grow-1">
         <div>
           <h2 className="text-2xl font-bold">{name}</h2>
           <div className="flex flex-row gap-2 items-center">
@@ -26,7 +25,7 @@ export const CharacterCard = ({ info }: { info: Character }) => {
               />
             </svg>
             <p>
-              {status} - {species} {type && `(${type})`}
+              {status} - {species}
             </p>
           </div>
         </div>
@@ -40,7 +39,7 @@ export const CharacterCard = ({ info }: { info: Character }) => {
             className="block py-1 hover:text-[#ffa219]"
             activeProps={{ className: 'font-bold underline' }}
           >
-            <p>{location.name}</p>
+            <p className="truncate">{location.name}</p>
           </Link>
         </div>
         <div>
@@ -53,7 +52,7 @@ export const CharacterCard = ({ info }: { info: Character }) => {
             className="block py-1 hover:text-[#ffa219]"
             activeProps={{ className: 'font-bold underline' }}
           >
-            <p>{origin.name}</p>
+            <p className="truncate">{origin.name}</p>
           </Link>
         </div>
       </div>

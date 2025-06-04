@@ -2,7 +2,7 @@ import { api } from '@/api/axios'
 import type { CharacterDto } from '@/dtos/characterDto'
 import type { PaginationDto } from '@/dtos/paginationDto'
 import type { Character } from '@/models/character'
-import { queryOptions } from '@tanstack/react-query'
+import { keepPreviousData, queryOptions } from '@tanstack/react-query'
 
 //#region API calls
 interface QueryParams {
@@ -64,14 +64,17 @@ const transformCharacterDto = (data: CharacterDto): Character => {
   }
 }
 
-export const allCharactersQueryOptions = (page?: number) =>
+export const allCharactersQueryOptions = (page: number = 1) =>
   queryOptions({
-    queryKey: ['characters', page ?? 1],
+    queryKey: ['characters', page],
     queryFn: () => getAllCharacters(),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     // * uses a stable function reference if transformation is expensive
-    select: (data: PaginationDto<CharacterDto>) => data.results.map((x) => transformCharacterDto(x)),
+    select: (data: PaginationDto<CharacterDto>) => ({
+      ...data,
+      results: data.results.map((x) => transformCharacterDto(x)),
+    }),
   })
 
 export const characterQueryOptions = (id: string) =>
