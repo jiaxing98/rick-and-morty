@@ -1,12 +1,16 @@
 import type { Character } from '@/models/character'
 import { Link } from '@tanstack/react-router'
 import clsx from 'clsx'
+import { TileCard } from '../_shared/TileCard'
 
 export const CharacterCard = ({ info }: { info: Character }) => {
-  const { name, status, species, type, origin, location, image } = info
+  const { name, status, species, origin, location, image } = info
 
   return (
-    <div className="flex flex-col w-full h-full rounded-2xl overflow-clip bg-[#2f3436] sm:flex-row sm:max-w-[600px] sm:max-h-[220px]">
+    <TileCard
+      className="flex flex-col w-full h-full rounded-2xl overflow-clip bg-[#2f3436] sm:flex-row sm:max-w-[600px]"
+      scale={1.05}
+    >
       <img className="object-cover w-auto h-auto sm:max-w-[230px]" src={image} alt={`${name}-image`} />
       <div className="flex flex-col gap-4 p-4 flex-grow-1">
         <div>
@@ -39,7 +43,7 @@ export const CharacterCard = ({ info }: { info: Character }) => {
             className="block py-1 hover:text-[#ffa219]"
             activeProps={{ className: 'font-bold underline' }}
           >
-            <p className="truncate">{location.name}</p>
+            <p>{location.name}</p>
           </Link>
         </div>
         <div>
@@ -52,10 +56,10 @@ export const CharacterCard = ({ info }: { info: Character }) => {
             className="block py-1 hover:text-[#ffa219]"
             activeProps={{ className: 'font-bold underline' }}
           >
-            <p className="truncate">{origin.name}</p>
+            <p>{origin.name}</p>
           </Link>
         </div>
       </div>
-    </div>
+    </TileCard>
   )
 }

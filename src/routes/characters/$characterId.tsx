@@ -4,7 +4,7 @@ import { useQueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-qu
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import { NotFoundError } from '@/api/axios'
 import { characterQueryOptions } from '@/queries/characterQuery'
-import { CharacterCard } from '@/components/card/CharacterCard'
+import { CharacterCard } from '@/components/characters/CharacterCard'
 
 export const Route = createFileRoute('/characters/$characterId')({
   loader: ({ context: { queryClient }, params: { characterId } }) => {
