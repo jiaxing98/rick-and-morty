@@ -12,6 +12,7 @@ interface Props {
 
 /**
  * Apply 3D tilt effect on mouse hover based on cursor position.
+ * Parent must have `perspective` property.
  *
  * ```ts
  * interface Props {
